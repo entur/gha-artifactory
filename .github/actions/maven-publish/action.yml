@@ -1,0 +1,33 @@
+name: Gradle Maven Publish Artifact
+description: Publishes a Gradle artifact to a Maven repository
+inputs:
+  publish_task_name:
+    default: "publish"
+    description: "The named Gradle task to run for publishing the artifact"
+  build_file:
+    default: ""
+    description: "If you want to use a build file, specify the command and the file name. E.g., '--build-file library.gradle'"
+  publish_command_options:
+    default: "--info"
+    description: "If you want to use any options for the publish command, specify them here. E.g., '--info'"
+  version:
+    required: false
+    description: "The version of the artifact to publish, exported as an environment variable called VERSION"
+  snapshot:
+    required: false
+    default: "false"
+    description: "Whether the version is a snapshot version or not"
+runs:
+    using: "composite"
+    steps:
+      - name: Set Version
+        shell: bash
+        if: ${{ inputs.version }}
+        run: echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
+      - name: Add Snapshot to version-tag
+        shell: bash
+        if: ${{ inputs.snapshot == 'true' }}
+        run: echo "VERSION=${{ inputs.version }}-SNAPSHOT" >> $GITHUB_ENV
+      - name: Gradle Publish
+        shell: bash
+        run: ./gradlew ${{ inputs.publish_task_name }} ${{ inputs.build_file }} ${{ inputs.publish_command_options }}

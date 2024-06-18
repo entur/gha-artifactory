@@ -1,3 +1,8 @@
+<h1 align="center">
+      <img src="logo.png" width="96px" height="96px" />
+      <br>entur/gha-artifactory<br>
+</h1>
+
 [![Entur/Artifactory/CI](https://github.com/entur/gha-artifactory/actions/workflows/ci.yml/badge.svg?event=pull_request)](https://github.com/entur/gha-artifactory/actions/workflows/ci.yml)
 
 GitHub Actions for working with Artifactory
