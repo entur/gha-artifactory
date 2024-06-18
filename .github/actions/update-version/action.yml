@@ -17,7 +17,7 @@
 
   outputs:
     version:
-      value: $VERSION
+      value: ${{ env.VERSION }}
       description: 'The new version of the artifact'
 
 
