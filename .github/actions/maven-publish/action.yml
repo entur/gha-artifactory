@@ -25,9 +25,11 @@ runs:
         if: ${{ inputs.version }}
         run: echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
       - name: Add Snapshot to version-tag
+        env:
+          GHA_ARTIFACTORY_VERSION: ${{ inputs.version }}
         shell: bash
         if: ${{ inputs.snapshot == 'true' }}
-        run: echo "VERSION=${{ inputs.version }}-SNAPSHOT" >> $GITHUB_ENV
+        run: echo "VERSION=${GHA_ARTIFACTORY_VERSION}-SNAPSHOT" >> $GITHUB_ENV
       - name: Gradle Publish
         shell: bash
         run: ./gradlew ${{ inputs.publish_task_name }} ${{ inputs.build_file }} ${{ inputs.publish_command_options }}
