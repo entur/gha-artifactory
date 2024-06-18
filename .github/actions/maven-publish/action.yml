@@ -22,12 +22,14 @@ runs:
     steps:
       - name: Set Version
         shell: bash
-        if: ${{ inputs.version }}
-        run: echo "VERSION=${{ inputs.version }}" >> $GITHUB_ENV
-      - name: Add Snapshot to version-tag
         env:
           GHA_ARTIFACTORY_VERSION: ${{ inputs.version }}
+        if: ${{ inputs.version }}
+        run: echo "VERSION=${GHA_ARTIFACTORY_VERSION}" >> $GITHUB_ENV
+      - name: Add Snapshot to version-tag
         shell: bash
+        env:
+          GHA_ARTIFACTORY_VERSION: ${{ inputs.version }}
         if: ${{ inputs.snapshot == 'true' }}
         run: echo "VERSION=${GHA_ARTIFACTORY_VERSION}-SNAPSHOT" >> $GITHUB_ENV
       - name: Gradle Publish
