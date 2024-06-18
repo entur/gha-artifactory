@@ -20,7 +20,6 @@
         steps:
             - uses: nick-fields/assert-action@v2
               with:
-                version_file_name: fixture/version-file.good
-                version_variable_name: version
-                expected_version: 1.2.3
+                expected: "1.0.0"
+                actual: ${{ needs.test-update-version-ok.outputs.version }}
 
