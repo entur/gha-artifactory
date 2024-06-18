@@ -27,13 +27,18 @@
       - name: Get Version Number From File
         if: ${{ inputs.version_file_name }}
         shell: bash
+        env:
+          GHA_ARTIFACTORY_VERSION_FILE_NAME: ${{ inputs.version_file_name }}
+          GHA_ARTIFACTORY_VERSION_VARIABLE_NAME: ${{ inputs.version_variable_name }}
         run: |
-          releaseVersion=$(cat ${{ inputs.version_file_name }} | grep "${{ inputs.version_variable_name }}" | cut -d'=' -f2)
+          releaseVersion=$(cat ${GHA_ARTIFACTORY_VERSION_FILE_NAME} | grep "${GHA_ARTIFACTORY_VERSION_VARIABLE_NAME}" | cut -d'=' -f2)
           echo "RELEASE_VERSION=$releaseVersion" >> $GITHUB_ENV
       - name: Set Previous Version as ENV variable if passed as input and not file
         if: ${{ !inputs.version_file_name && inputs.previous-version }}
         shell: bash
-        run: echo "RELEASE_VERSION=${{ inputs.previous-version }}" >> $GITHUB_ENV
+        env:
+          GHA_ARTIFACTORY_PREVIOUS_VERSION: ${{ inputs.previous-version }}
+        run: echo "RELEASE_VERSION=${GHA_ARTIFACTORY_PREVIOUS_VERSION}" >> $GITHUB_ENV
       - name: Increase Version Number By One and export to VERSION env variable
         shell: bash
         run: |
@@ -45,14 +50,23 @@
           echo "VERSION=$version" >> $GITHUB_ENV
       - name: Insert new version into file
         shell: bash
+        env:
+          GHA_ARTIFACTORY_VERSION_FILE_NAME: ${{ inputs.version_file_name }}
+          GHA_ARTIFACTORY_VERSION_VARIABLE_NAME: ${{ inputs.version_variable_name }}
+          GHA_ARTIFACTORY_VERSION: ${{ env.VERSION }}
         run: |
-          sed -i "s/${{ inputs.version_variable_name }}=.*/${{ inputs.version_variable_name }}=$VERSION/" ${{ inputs.version_file_name }}
+          sed -i "s/${GHA_ARTIFACTORY_VERSION_VARIABLE_NAME}=.*/${GHA_ARTIFACTORY_VERSION_VARIABLE_NAME}=$GHA_ARTIFACTORY_VERSION/" ${GHA_ARTIFACTORY_VERSION_FILE_NAME}
       - name: Push Version
         if: ${{ inputs.push-back-to-repo == 'true' }}
         shell: bash
+        env:
+            GHA_ARTIFACTORY_GITHUB_REF_NAME: ${{ github.ref }}
+            GHA_ARTIFACTORY_VERSION_FILE_NAME: ${{ inputs.version_file_name }}
+            GHA_ARTIFACTORY_VERSION_VARIABLE_NAME: ${{ inputs.version_variable_name }}
+            GHA_ARTIFACTORY_VERSION: ${{ env.VERSION }}
         run: |
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add ${{ inputs.version_file_name }}
-          git commit -m "chore(bump): Bump ${{ inputs.version_variable_name }} to $VERSION [skip ci]"
-          git push origin $GITHUB_REF_NAME --force
+          git add ${GHA_ARTIFACTORY_VERSION_FILE_NAME}
+          git commit -m "chore(bump): Bump ${GHA_ARTIFACTORY_VERSION_VARIABLE_NAME} to $ GHA_ARTIFACTORY_VERSION [skip ci]"
+          git push origin $GHA_ARTIFACTORY_GITHUB_REF_NAME --force
