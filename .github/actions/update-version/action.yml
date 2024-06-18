@@ -15,6 +15,12 @@
       description: 'The previous (semver) version of the artifact'
       required: false
 
+  outputs:
+    version:
+      value: ${{ env.VERSION }}
+      description: 'The new version of the artifact'
+
+
   runs:
     using: "composite"
     steps:
