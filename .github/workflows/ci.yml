@@ -1,0 +1,15 @@
+  name: Entur/Artifactory/CI
+
+  on:
+    pull_request:
+
+  jobs:
+    test-update-version-ok:
+        runs-on: ubuntu-24.04
+        steps:
+            - uses: ./.github/actions/update-version
+              with:
+                version_file_name: fixture/version-file.good
+                version_variable_name: version
+                push-back-to-repo: false
+

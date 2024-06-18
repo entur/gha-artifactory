@@ -4,20 +4,30 @@
     version_file_name:
       description: 'The name of the file containing the version number'
       required: false
-      default: 'gradle.properties'
     version_variable_name:
       description: 'The name of the variable containing the version number'
       required: false
-      default: 'version'
+    push-back-to-repo:
+      description: 'Whether to push the new version back to the repo'
+      required: false
+      default: 'true'
+    previous-version:
+      description: 'The previous (semver) version of the artifact'
+      required: false
 
   runs:
     using: "composite"
     steps:
       - name: Get Version Number From File
+        if: ${{ inputs.version_file_name }}
         shell: bash
         run: |
           releaseVersion=$(cat ${{ inputs.version_file_name }} | grep "${{ inputs.version_variable_name }}" | cut -d'=' -f2)
           echo "RELEASE_VERSION=$releaseVersion" >> $GITHUB_ENV
+      - name: Set Previous Version as ENV variable if passed as input and not file
+        if: ${{ !inputs.version_file_name && inputs.previous-version }}
+        shell: bash
+        run: echo "RELEASE_VERSION=${{ inputs.previous-version }}" >> $GITHUB_ENV
       - name: Increase Version Number By One and export to VERSION env variable
         shell: bash
         run: |
@@ -32,6 +42,7 @@
         run: |
           sed -i "s/${{ inputs.version_variable_name }}=.*/${{ inputs.version_variable_name }}=$VERSION/" ${{ inputs.version_file_name }}
       - name: Push Version
+        if: ${{ inputs.push-back-to-repo == 'true' }}
         shell: bash
         run: |
           git config user.name github-actions[bot]
