@@ -12,6 +12,8 @@ GitHub Actions for working with Artifactory
 - Using the [Maven Publish Plugin](https://docs.gradle.org/current/userguide/publishing_maven.html)
 - `./gradle-properties` file at the root of your repository
 - `./gradle-properties` contains "version" variable with semver version format, e.g., "1.0.0"
+- Use after Gradle build to have the artifact ready for publishing
+- Use on main branch push events, to avoid pushing back to the repo unnecessarily
 
 ### Example
 
@@ -35,9 +37,9 @@ on:
 
 jobs:
   update-version:
-    uses: entur/gha-artifactory/.github/workflows/update-version.yml@v1
+    uses: entur/gha-artifactory/.github/actions/update-version.yml@v1
 
   publish-artifact:
-    uses: entur/gha-artifactory/.github/workflows/publish-artifact.yml@v1
+    uses: entur/gha-artifactory/.github/actions/publish-artifact.yml@v1
 ```
 
