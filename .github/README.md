@@ -40,7 +40,7 @@ jobs:
   update-version:
     permissions:
     contents: write
-    uses: entur/gha-artifactory/.github/actions/update-version.yml@v1
+    uses: entur/gha-artifactory/.github/actions/update-version@v1
 
   publish-artifact:
     uses: entur/gha-artifactory/.github/actions/publish-artifact.yml@v1
