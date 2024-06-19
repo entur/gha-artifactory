@@ -39,7 +39,7 @@ on:
 jobs:
   update-version:
     permissions:
-    contents: write
+      contents: write
     uses: entur/gha-artifactory/.github/actions/update-version@v1
 
   maven-publish:
