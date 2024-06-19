@@ -42,7 +42,7 @@ jobs:
     contents: write
     uses: entur/gha-artifactory/.github/actions/update-version@v1
 
-  publish-artifact:
-    uses: entur/gha-artifactory/.github/actions/publish-artifact.yml@v1
+  maven-publish:
+    uses: entur/gha-artifactory/.github/actions/maven-publish@v1
 ```
 
