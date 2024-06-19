@@ -46,7 +46,7 @@
         run: |
           major=`echo $RELEASE_VERSION | cut -d. -f1`
           minor=`echo $RELEASE_VERSION | cut -d. -f2`
-          patch=`echo $RELEASE_VERSIONs | cut -d. -f3`
+          patch=`echo $RELEASE_VERSION | cut -d. -f3`
           patch=`expr $patch + 1`
           version=`echo $major.$minor.$patch`
           echo "VERSION=$version" >> $GITHUB_ENV
@@ -70,5 +70,5 @@
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git add ${GHA_ARTIFACTORY_VERSION_FILE_NAME}
-          git commit -m "chore(bump): Bump ${GHA_ARTIFACTORY_VERSION_VARIABLE_NAME} to $ GHA_ARTIFACTORY_VERSION [skip ci]"
+          git commit -m "chore(bump): Bump ${GHA_ARTIFACTORY_VERSION_VARIABLE_NAME} to ${GHA_ARTIFACTORY_VERSION} [skip ci]"
           git push origin $GHA_ARTIFACTORY_GITHUB_REF_NAME --force
