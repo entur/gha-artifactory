@@ -12,26 +12,35 @@ inputs:
     description: "If you want to use any options for the publish command, specify them here. E.g., '--info'"
   version:
     required: false
-    description: "The version of the artifact to publish, exported as an environment variable called VERSION"
+    description: "Override the version of the artifact to publish, exported as an environment variable called VERSION and temporarily updates the gradle.properties version property"
   snapshot:
     required: false
     default: "false"
-    description: "Whether the version is a snapshot version or not"
+    description: "Whether the version is a snapshot version or not. if gradle, a gradle.properties file is expected and the version is specified without a -snapshot suffix"
 runs:
     using: "composite"
     steps:
-      - name: Set Version
+      - if: ${{ inputs.version }}
+        name: Set Version
         shell: bash
         env:
-          GHA_ARTIFACTORY_VERSION: ${{ inputs.version }}
-        if: ${{ inputs.version }}
-        run: echo "VERSION=${GHA_ARTIFACTORY_VERSION}" >> $GITHUB_ENV
-      - name: Add Snapshot to version-tag
+          version: ${{ inputs.version }}
+        run: |
+          echo "VERSION=${version}" >> $GITHUB_ENV
+          if [ -f gradle.properties ]; then
+            sed -i.bak "/^version/s/=.*/=${version}/" gradle.properties
+          fi
+      - if: ${{ inputs.snapshot != 'false' }}
+        name: Add Snapshot to version-tag
         shell: bash
-        env:
-          GHA_ARTIFACTORY_VERSION: ${{ inputs.version }}
-        if: ${{ inputs.snapshot == 'true' }}
-        run: echo "VERSION=${GHA_ARTIFACTORY_VERSION}-SNAPSHOT" >> $GITHUB_ENV
+        run: |
+          if [ -f gradle.properties ]; then
+            sed -i.bak '/^version/s/$/-SNAPSHOT/' gradle.properties
+          fi
       - name: Gradle Publish
         shell: bash
-        run: ./gradlew ${{ inputs.publish_task_name }} ${{ inputs.build_file }} ${{ inputs.publish_command_options }}
+        env:
+          publish_task_name: ${{ inputs.publish_task_name }}
+          build_file: ${{ inputs.build_file }}
+          publish_command_options: ${{ inputs.publish_command_options }}
+        run: ./gradlew ${publish_task_name} ${build_file} ${publish_command_options}
