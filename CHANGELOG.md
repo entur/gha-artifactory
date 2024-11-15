@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/entur/gha-artifactory/compare/v1.1.0...v1.1.1) (2024-11-15)
+
+
+### Bug Fixes
+
+* Snapshot fix ([#8](https://github.com/entur/gha-artifactory/issues/8)) ([41a9afd](https://github.com/entur/gha-artifactory/commit/41a9afdecdcd98fd198d3d9d039646e46af1d256))
+
 ## [1.1.0](https://github.com/entur/gha-artifactory/compare/v1.0.1...v1.1.0) (2024-11-15)
 
 
