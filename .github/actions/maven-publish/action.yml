@@ -30,7 +30,7 @@ runs:
         shell: bash
         env:
           GHA_ARTIFACTORY_VERSION: ${{ inputs.version }}
-        if: ${{ inputs.snapshot == 'true' }}
+        if: ${{ inputs.snapshot != 'false' }}
         run: echo "VERSION=${GHA_ARTIFACTORY_VERSION}-SNAPSHOT" >> $GITHUB_ENV
       - name: Gradle Publish
         shell: bash
