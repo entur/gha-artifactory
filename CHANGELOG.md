@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/entur/gha-artifactory/compare/v1.0.1...v1.1.0) (2024-11-15)
+
+
+### Features
+
+* reusable workflow to test jfrog artifactory login credentials ([#6](https://github.com/entur/gha-artifactory/issues/6)) ([f989131](https://github.com/entur/gha-artifactory/commit/f9891313d7cff6031ac21b3aa5c2b933f16238cf))
+* reusable workflow to test login credentials ([f989131](https://github.com/entur/gha-artifactory/commit/f9891313d7cff6031ac21b3aa5c2b933f16238cf))
+
 ## [1.0.1](https://github.com/entur/gha-artifactory/compare/v1.0.0...v1.0.1) (2024-06-19)
 
 
